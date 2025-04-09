@@ -2,4 +2,10 @@
 title: "Case Study"
 ---
 
-Your case study will go here.
+**Article:** [Crossword Scandal](https://fivethirtyeight.com/features/a-plagiarism-scandal-is-unfolding-in-the-crossword-world/) from `FiveThirtyEight`
+
+It was very interesting to examine this article from a data science perspective, and it serves as a great example for what our project might look like. Because the topic's details might not be familiar to the common reader, the article was clearly laid out and provided **contextual explanation** to why the topic (plagiarism in crossword puzzles) is important to its field, even though it might not seem like a serious issue. Even without considering the graphs themselves, the evidence was presented with **clear examples** (the example "shady" and "shoddy" crosswords), with the key information highlighted to be visible at a glance.
+
+The graphs themselves follow **effective visualization principles**, with cleanly presentated data and the key information once again highlighed in an easily visible color against a monochromatic background (though, it didn't seem like they had much alt-text). 
+
+Beyond the presentation and structure of this article itself being an excellent example for our project, the topic and some of the quotes are applicable as well. To quote the article, "[Many in the crossword world] see the database that revealed the repetition as a tool of justice." This is an example of just how data science can be used to create solutions to issues that might have arisen before or been unsolvable until the digital age. It creates a compelling image of just how **useful** and **powerful** properly collected and analyzed data can be!

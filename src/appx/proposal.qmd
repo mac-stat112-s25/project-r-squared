@@ -3,9 +3,13 @@ title: "Proposal"
 ---
 
 **Team:** R Squared
+
 **Members:** Bontu T. & Dust L.
+
 **Description:** We will use bird sighting data from the Cornell Lab to analyze frequency and location of Snowy owl sightings across a span of time and explore how their behavior and migration routes have changed due to environmental impacts.
+
 **Reason:** As the rate of human-induced climate change increases, we wanted to explore its impact on the other creatures that we share this world with, and highlight the physical effects on areas other than humans that are often overlooked. 
+
 **Implementation:**
 
 

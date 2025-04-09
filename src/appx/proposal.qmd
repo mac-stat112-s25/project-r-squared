@@ -11,17 +11,5 @@ title: "Proposal"
 **Reason:** As the rate of human-induced climate change increases, we wanted to explore its impact on the other creatures that we share this world with, and highlight the physical effects on areas other than humans that are often overlooked. 
 
 **Implementation:**
-```{r}
-#table of tasks
-tasks <- data.frame(
-  member = c("Bontu", "Dust"),
-  task1 = c("data_download", "proposal"),
-  task2 = c("teamwork_writeup", "teamwork_writeup"),
-  task3 = c("read_in_data", "read_up_on_topic")
-)
-
-head(tasks)
-```
-
 
 

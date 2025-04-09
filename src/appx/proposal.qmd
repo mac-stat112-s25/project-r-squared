@@ -12,6 +12,12 @@ title: "Proposal"
 
 **Implementation:**
 
+```{r}
+#table of tasks
+tasks <- data.frame(
+  member
+)
+```
 
 
 

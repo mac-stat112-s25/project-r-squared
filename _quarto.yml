@@ -37,6 +37,14 @@ book:
 
   chapters:
     - index.qmd
+    
+    - part: "Effective Teamwork"
+      chapters:
+      - src/et/dust-l.qmd
+  
+    - part: "EDA"
+      chapters:
+      - src/eda/dust-l.qmd
 
   appendices:
   - src/appx/proposal.qmd

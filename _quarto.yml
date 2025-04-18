@@ -41,10 +41,12 @@ book:
     - part: "Effective Teamwork"
       chapters:
       - src/et/dust-l.qmd
+      - src/et/dani-a.qmd
   
     - part: "EDA"
       chapters:
       - src/eda/dust-l.qmd
+      - src/eda/dani-a.qmd
 
   appendices:
   - src/appx/proposal.qmd

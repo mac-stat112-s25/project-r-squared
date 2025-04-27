@@ -3,3 +3,7 @@ title: "dani-a"
 format: html
 ---
 
+```{r}
+list.files("../data")
+
+```

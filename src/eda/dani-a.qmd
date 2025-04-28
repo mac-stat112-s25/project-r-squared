@@ -4,6 +4,22 @@ format: html
 ---
 
 ```{r}
-list.files("../data")
+library(readr)
+edbird<-read_csv("../../data/ebd_US-AK_snoowl1_198001_202412_smp_relFeb-2025.csv")
+View(edbird)
+head(ebird)
+```
 
+```{r}
+library(ggplot2)
+ggplot(edbird, aes(x = `OBSERVATION DATE`)) +
+  geom_bar()+
+  facet_wrap(~ `PROTOCOL TYPE`)
+
+ggplot(edbird, aes(x=`PROTOCOL TYPE`)) +
+  geom_bar()
+
+ggplot(edbird, aes(x = COUNTY, fill = `PROTOCOL TYPE`)) +
+  geom_bar(position = "fill") +
+  coord_flip()
 ```

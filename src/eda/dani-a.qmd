@@ -7,7 +7,7 @@ format: html
 library(readr)
 edbird<-read_csv("../../data/ebd_US-AK_snoowl1_198001_202412_smp_relFeb-2025.csv")
 View(edbird)
-head(ebird)
+head(edbird)
 ```
 
 ```{r}

@@ -1,0 +1,78 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "project title",
+    "section": "",
+    "text": "Introduction\nThe effects of human-induced global warming have been known and observable for years. Rising temperatures, receding ice sheets, and increased severe weather are only the tips of this melting iceberg, and these effects already span the globe. However, we humans aren’t the only ones affected by our own actions, and other animals on the planet are beginning to feel the toll as well. Birds, in particular. Global warming has wreaked havoc on bird populations, from destroying their habitats to creating temperatures that are downright lethal to some species. Seasonal birds, too, have had their migration patterns impacted by global climate change. Our research focuses on a particular species: the Snowy Owl. Elusive and already rare, its adaptation to arctic climates means it is even more impacted by climate change than many other species. By using information most easily available to us - that is, evolution of migration patterns - we hope to illustrate this impact and raise awareness on the non-human effects of climate change.\n\n\nBackground\nIn order to analyze frequency and location of Snowy owl sightings across a span of time,we utilized Cornell University’s eBird Basic Dataset from their department of Ornithology. eBird is a public data/observation recording platform that allows birdwatchers to document, manage, and upload their sightings; this allows for extensive and detailed coverage worldwide, with over 100 million annual sightings contributed through the platform. Not only does the platform document simple sighting data, it also tracks behavior, habitat, population and trends, and any uncommon entries are reviewed by regional experts. This ensures data quality in addition to quantity. The public data is updated regularly at monthly intervals. eBird data is freely available by request, with the ability to filter by region, species, and timeframe. We opted to examine Snowy Owl sightings in Alaska - a contained and more accessible region of their arctic habitat. After requesting the data, we followed some of the guidelines in the eBird data best practices document to simplify and filter it, including filtering by specific months vs. year-round, and converting checklist locations (the way data is originally recorded by the uploader) into geometry that can be used in spatial viz.\n\n\nFindings\nBy comparing data of Snowy Owl sightings from 1980 to today, we were able to determine a few things.\n[Spatial viz here] Overall, the sightings in Summer, when migration typically happens, compared to the year-round data appears to be quite similar, with a few outliers in the southernmost parts of Alaska appearing in the year-round data but not the summer ones. This could be due to a scarcity of data as well as influenced by bias, which will be further discussed in the next section.\n[Altitude viz here] The latitude of Snowy owl migrations have been steadily increasing from 1988 to today, with a noticeable peak around 2020. This indicates that the owls have had to travel further and further north to find a suitable climate and habitat for them, and is the most direct indicator of migration shifts caused over time by global warming. Otherwise, the two graphs are again fairly similar, with the year-round data having a shallow dip around the early 1990s compared to the summer data steadily increasing since the start.\n[All protocol viz here] We took a look at the protocol type of our observation data as well. Protocol type indicates the circumstances of the birdwatcher’s observation, which affects the type of checklist data they submit. For the ones we include here:\n\nArea is intended for targeted, specialized surveys that exhaustively and scientifically search a specific area for birds. Contrary to most birding trips, this often involves repeatedly covering an area of land, and is more concerned about area covered than distance traveled. This is most commonly seen in professional research rather than casual birdwatching.\nBanding involves observations for birds captured for banding, which means attaching a band or tag to their leg to create a permanent record of bird observations. Banding observations have very different rates from casual birdwatching, like the Area protocol, and is usually researced for professional research.\nHistorical indicates that there was an observation, but the exact details - such as start time, duration, and distance - are unclear.\nIncidental indicates the observation was not the primary purpose of the trip - that is, the observation happened as an aside from another activity.\nStationary and Traveling both indicate trips taken specifically for birding (NOT Incidental), with exact time/duration and location data. Stationary means there was very little traveling from the starting location (less than 100ft.), while Traveling exceeds that movement and contains a best estimate of distance traveled.\n\nIn our data, we notice that Traveling is the most reported protocol by a wide margin, at almost 5000 entries indicating intentional birding trips. These, though more accurate, can also be more susceptible to bias, as discussed below.\n\n\nBiases\nGiven that eBird reports an average growth rate of 20% every year, it is possible that increased frequency of snowy owl sightings over time can be explained by the increasing popularity and knowledge of birding as an activity and eBird as a platform, as well as the internet itself entering the mainstream. Additionally, eBird employs complete and incomplete checklists: complete checklists means that all birds on the list were observed, and there were no additional entries; thus, it can be inferred that if a bird is not on the list, it was not observed in the area. Incomplete checklists mean while do not have this kind of certainty, as the absence of a bird from the data may simply indicate the uploader didn’t record its presence. In our filtering, we removed amounts of incomplete data, resulting in a much smaller amount of data that only included Snowy owl sightings, and this almost certainly has impacted the specificity of our results. eBird data itself is susceptible to many biases, with a list outline here. Our spatial data is likely influenced by location/population bias: the areas where there are the most sightings also coincide with higher-populated areas, which means there are simply more people to report sightings and leads to higher-frequency reports. We ourselves are not familiar with Alaska’s climate or population situations, so this bias is difficult to resolve.\n\n\nConclusion & Next Steps\nWe can evidently see that the frequency in which snowy owls migrate has increased significantly in the last decade, in the majority of locations they’ve been observed. Given that the effect of climate change on bird species is well documented, we can extrapolate that this increased frequency is due to human-caused global warming. With our current data, we were able to show that snowy owl migrations have increased and can infer that it is due to climate change, but if we could integrate climate data (such as temperature and wind speeds), the results would be more conclusive. Unfortunately due to our unfamiliarity and context surrounding the state of Alaska and it’s counties in our dataset, we are unable to conclude the location nor direction of snowy owls as they migrate. Limiting our observations to Alaska also impacts our results: snowy owls have other habitats, of which Alaska comprises only a small portion. Some of these locations are hidden or difficult to access, and thus the observations might not be accurate to their actual behavior. There are many further questions we could extrapolate from here, such as whether the trends we draw can be conclusive to future data, and whether it is possible to predict Snowy Owl migration routes. However, to answer these questions, much more work has to be done to address the biases and shortcomings of our current data.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Evidence on Wings: How Has Snowy Owl Migration Shifted?</span>"
+    ]
+  },
+  {
+    "objectID": "src/et/dust-l.html",
+    "href": "src/et/dust-l.html",
+    "title": "",
+    "section": "",
+    "text": "Effective Teamwork2  dust-l.html Code",
+    "crumbs": [
+      "Effective Teamwork",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>dust-l.html</span>"
+    ]
+  },
+  {
+    "objectID": "src/et/dani-a.html",
+    "href": "src/et/dani-a.html",
+    "title": "3  dani-a",
+    "section": "",
+    "text": "Article: Teamwork Skills: Being an Effective Group Membe from ‘Unversity of Waterloo’\nI really enjoyed the focus on skills that not only each team member should have when working as a group but skills the group as a whole should have as well. It starts off with talking about communication skills stating that team members should explain their ideas, express their feelings in a non-offense way, listen to others, ask clarifying questions and encourage other group members. Next it talks about how to create a healthy climate as an entire group stating that as a group you should get to know one another, trust one another, demonstrate support for one another, and lastly communicate your opinions respectfully.\nLastly the article mentions skills particularly for the group process and making it as effective as possible. Such skills include agreeing on what needs to be done and how we go about dividing up work, giving and receiving feedback, making a plan, and creating roles for the group.",
+    "crumbs": [
+      "Effective Teamwork",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>dani-a</span>"
+    ]
+  },
+  {
+    "objectID": "src/eda/dust-l.html",
+    "href": "src/eda/dust-l.html",
+    "title": "",
+    "section": "",
+    "text": "EDA4  dust-l.html Code",
+    "crumbs": [
+      "EDA",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>dust-l.html</span>"
+    ]
+  },
+  {
+    "objectID": "src/eda/dani-a.html",
+    "href": "src/eda/dani-a.html",
+    "title": "\n5  dani-a\n",
+    "section": "",
+    "text": "#library(readr)\n#edbird&lt;-read_csv(\"../../data/ebd_US-AK_snoowl1_198001_202412_smp_relFeb-2025.csv\")\n#View(edbird)\n#head(edbird)\n\n\n#library(ggplot2)\n#ggplot(edbird, aes(x = `OBSERVATION DATE`)) +\n#  geom_bar()+\n# facet_wrap(~ `PROTOCOL TYPE`)\n\n#ggplot(edbird, aes(x=`PROTOCOL TYPE`)) +\n#  geom_bar()\n\n#ggplot(edbird, aes(x = COUNTY, fill = `PROTOCOL TYPE`)) +\n#  geom_bar(position = \"fill\") +\n#  coord_flip()",
+    "crumbs": [
+      "EDA",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>dani-a</span>"
+    ]
+  },
+  {
+    "objectID": "src/appx/proposal.html",
+    "href": "src/appx/proposal.html",
+    "title": "Appendix A — Proposal",
+    "section": "",
+    "text": "Team: R Squared\nMembers: Bontu T. & Dust L.\nDescription: We will use bird sighting data from the Cornell Lab to analyze frequency and location of Snowy owl sightings across a span of time and explore how their behavior and migration routes have changed due to environmental impacts.\nReason: As the rate of human-induced climate change increases, we wanted to explore its impact on the other creatures that we share this world with, and highlight the physical effects on areas other than humans that are often overlooked.\nImplementation:\n\n#table of tasks\ntasks &lt;- data.frame(\n  member = c(\"Bontu\", \"Dust\"),\n  task1 = c(\"data_download\", \"proposal\"),\n  task2 = c(\"teamwork_writeup\", \"teamwork_writeup\"),\n  task3 = c(\"read_in_data\", \"read_up_on_topic\")\n)\nhead(tasks)\n\n  member         task1            task2            task3\n1  Bontu data_download teamwork_writeup     read_in_data\n2   Dust      proposal teamwork_writeup read_up_on_topic",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>A</span>  <span class='chapter-title'>Proposal</span>"
+    ]
+  },
+  {
+    "objectID": "src/appx/case-study.html",
+    "href": "src/appx/case-study.html",
+    "title": "Appendix B — Case Study",
+    "section": "",
+    "text": "Article: Crossword Scandal from FiveThirtyEight\nIt was very interesting to examine this article from a data science perspective, and it serves as a great example for what our project might look like. Because the topic’s details might not be familiar to the common reader, the article was clearly laid out and provided contextual explanation to why the topic (plagiarism in crossword puzzles) is important to its field, even though it might not seem like a serious issue. Even without considering the graphs themselves, the evidence was presented with clear examples (the example “shady” and “shoddy” crosswords), with the key information highlighted to be visible at a glance.\nThe graphs themselves follow effective visualization principles, with cleanly presented data and the key information once again highlighted in an easily visible color against a monochromatic background (though, it didn’t seem like they had much alt-text).\nBeyond the presentation and structure of this article itself being an excellent example for our project, the topic and some of the quotes are applicable as well. To quote the article, “[Many in the crossword world] see the database that revealed the repetition as a tool of justice.” This is an example of just how data science can be used to create solutions to issues that might have arisen before or been unsolvable until the digital age. It creates a compelling image of just how useful and powerful properly collected and analyzed data can be!",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>B</span>  <span class='chapter-title'>Case Study</span>"
+    ]
+  }
+]

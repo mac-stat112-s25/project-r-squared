@@ -7,12 +7,16 @@ code-fold: false  # change to true to fold the code chunks
 
 # Introduction {-}
 The effects of human-induced global warming have been known and observable for years. Rising temperatures, receding ice sheets, and increased severe weather are only the tips of this melting iceberg, and these effects already span the globe. However, we humans aren't the only ones affected by our own actions, and other animals on the planet are beginning to feel the toll as well.
+
 Birds, in particular. Global warming has wreaked havoc on bird populations, from destroying their habitats to creating temperatures that are downright lethal to some species. Seasonal birds, too, have had their migration patterns impacted by global climate change.
+
 Our research focuses on a particular species: the Snowy Owl. Elusive and already rare, its adaptation to arctic climates means it is even more impacted by climate change than many other species. By using information most easily available to us - that is, evolution of migration patterns - we hope to illustrate this impact and raise awareness on the non-human effects of climate change.
 
 # Background {-}
 In order to analyze frequency and location of Snowy owl sightings across a span of time,we utilized Cornell University’s eBird Basic Dataset from their department of Ornithology. [eBird](https://ebird.org/home) is a public data/observation recording platform that allows birdwatchers to document, manage, and upload their sightings; this allows for extensive and detailed coverage worldwide, with over 100 million annual sightings contributed through the platform. Not only does the platform document simple sighting data, it also tracks behavior, habitat, population and trends, and any uncommon entries are reviewed by regional experts. This ensures data quality in addition to quantity. The public data is updated regularly at monthly intervals.
+
 eBird data is freely available by request, with the ability to filter by region, species, and timeframe. We opted to examine Snowy Owl sightings in Alaska - a contained and more accessible region of their arctic habitat.
+
 After requesting the data, we followed some of the guidelines in the [eBird data best practices](https://ebird.github.io/ebird-best-practices/intro.html) document to simplify and filter it, including filtering by specific months vs. year-round, and converting checklist locations (the way data is originally recorded by the uploader) into geometry that can be used in spatial viz.
 
 # Findings {-}
@@ -37,12 +41,15 @@ In our data, we notice that **Traveling** is the most reported protocol by a wid
 
 # Biases {-}
 Given that eBird reports an average growth rate of 20% every year, it is possible that increased frequency of snowy owl sightings over time can be explained by the increasing popularity and knowledge of birding as an activity and eBird as a platform, as well as the internet itself entering the mainstream.
+
 Additionally, eBird employs `complete` and `incomplete` checklists: complete checklists means that all birds on the list were observed, and there were no additional entries; thus, it can be inferred that if a bird is not on the list, it was not observed in the area. Incomplete checklists mean while do not have this kind of certainty, as the absence of a bird from the data may simply indicate the uploader didn't record its presence. In our filtering, we removed amounts of incomplete data, resulting in a much smaller amount of data that only included Snowy owl sightings, and this almost certainly has impacted the specificity of our results.
 eBird data itself is susceptible to many biases, with a list outline [here](https://ebird.github.io/ebird-best-practices/ebird.html#sec-ebird-challenges). Our spatial data is likely influenced by location/population bias: the areas where there are the most sightings also coincide with higher-populated areas, which means there are simply more people to report sightings and leads to higher-frequency reports. We ourselves are not familiar with Alaska's climate or population situations, so this bias is difficult to resolve.
 
 # Conclusion & Next Steps {-}
 We can evidently see that the frequency in which snowy owls migrate has increased significantly in the last decade, in the majority of locations they’ve been observed. Given that the effect of climate change on bird species is well documented, we can extrapolate that this increased frequency is due to human-caused global warming.
+
 With our current data, we were able to show that snowy owl migrations have increased and can infer that it is due to climate change, but if we could integrate climate data (such as temperature and wind speeds), the results would be more conclusive. Unfortunately due to our unfamiliarity and context surrounding the state of Alaska and it’s counties in our dataset, we are unable to conclude the location nor direction of snowy owls as they migrate. 
+
 Limiting our observations to Alaska also impacts our results: snowy owls have other habitats, of which Alaska comprises only a small portion. Some of these locations are hidden or difficult to access, and thus the observations might not be accurate to their actual behavior.
 There are many further questions we could extrapolate from here, such as whether the trends we draw can be conclusive to future data, and whether it is possible to predict Snowy Owl migration routes. However, to answer these questions, much more work has to be done to address the biases and shortcomings of our current data.
 

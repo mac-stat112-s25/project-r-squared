@@ -1,5 +1,7 @@
 ---
 title: "Proposal"
+execute: 
+  echo: false      # change to true to show the code
 ---
 
 **Team:** R Squared
@@ -14,10 +16,10 @@ title: "Proposal"
 ```{r}
 #table of tasks
 tasks <- data.frame(
-  member = c("Bontu", "Dust"),
-  task1 = c("data_download", "proposal"),
-  task2 = c("teamwork_writeup", "teamwork_writeup"),
-  task3 = c("read_in_data", "read_up_on_topic")
+  member = c("Bontu", "Dust", "Dani"),
+  task1 = c("Data download", "Proposal & Case study", "Group EDA"),
+  task2 = c("Individual components", "Individual components", "Individual components"),
+  task3 = c("Data processing & Code", "Background research & Writing", "Code & Presentation")
 )
 head(tasks)
 ```

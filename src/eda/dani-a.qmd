@@ -1,13 +1,13 @@
 ---
-title: "dani-a"
+title: "Dani A."
 format: html
 ---
 
 ```{r}
 library(readr)
 edbird<-read_csv("../../data/ebd_US-AK_snoowl1_198001_202412_smp_relFeb-2025.csv")
-View(edbird)
-head(edbird)
+# View(edbird)
+# head(edbird)
 ```
 
 ```{r}

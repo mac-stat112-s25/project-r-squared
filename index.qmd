@@ -1,7 +1,7 @@
 ---
-title: "Evidence on Wings: How Has Snowy Owl Migration Shifted?"
+title: "Report"
 execute: 
-  echo: true      # change to true to show the code
+  echo: false      # change to true to show the code
 code-fold: false  # change to true to fold the code chunks
 ---
 

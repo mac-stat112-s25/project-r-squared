@@ -1,0 +1,24 @@
+---
+title: "Dust L."
+format: html
+---
+```{r}
+library(ggplot2)
+library(readr)
+ebd<-read_csv("../../data/ebd_US-AK_snoowl1_198001_202412_smp_relFeb-2025.csv")
+
+View(ebd)
+head(ebd)
+colnames(ebd)
+str(ebd)
+```
+
+```{r}
+ggplot(ebd, aes(x = `NUMBER OBSERVERS`)) +
+  geom_bar() + 
+  facet_wrap(~`ALL SPECIES REPORTED`)
+
+ggplot(ebd, aes(x = `PROTOCOL TYPE`)) +
+  geom_bar() + 
+  facet_wrap(~`ALL SPECIES REPORTED`)
+```

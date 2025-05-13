@@ -65,3 +65,6 @@ _freeze/
 *.log
 *.aux
 *.toc
+src/appx/checklists-zf_snoowl_us-ak.csv
+src/appx/ebd_US-AK_snoowl1_198001_202412_smp_relFeb-2025_sampling.txt
+src/appx/checklists-zf_snoowl_us-ak_3.csv

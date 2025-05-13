@@ -1,13 +1,359 @@
 ---
 title: "Report"
 execute: 
-  echo: true      # change to true to show the code
+  echo: false      # change to true to show the code
 code-fold: false  # change to true to fold the code chunks
 ---
 
-Your report will go here.
+```{r include=FALSE, message=FALSE, warning=FALSE}
+#packages
+library(auk) # to work with eBird data
+library(dplyr)
+library(lubridate)
+library(rnaturalearth)
+library(sf)
+library(ggplot2)
+library(gridExtra)
+library(readr)
+library(stringr)
+library(maps)
+library(mosaic)
 
-```{r}
-# this is a test code
+
+gpkg_file <- "https://drive.google.com/file/d/12Ba6t_6-i4298pbO8WsgcKkVvzSY3Z8v/view?usp=drive_link"
+
+sed <-  "https://drive.google.com/file/d/1TyQHCvkQg6V0t0rvMQukGUwjTIlteUHo/view?usp=drive_link"
+temp <- tempfile()
+download.file(sed, temp)
+sed <- read.table(temp, "ebd_US-AK_snoowl1_198001_202412_smp_relFeb-2025_sampling.txt")
+unlink(temp)
+checklists <- read_sampling(sed)
+glimpse(checklists)
+
+ebd <- "https://drive.google.com/file/d/1chjYaOyvy56z8nAr8DXftqo3g02PrxhZ/view?usp=drive_link"
+temp <- tempfile()
+download.file(ebd, temp)
+ebd <- read.table(temp, "ebd_US-AK_snoowl1_198001_202412_smp_relFeb-2025.txt")
+observations <- read_ebd(ebd)
+head(observations)
+
+
+#shared
+checklists_shared <- read_sampling(sed, unique = FALSE)
+# identify shared checklists
+checklists_shared |> 
+  filter(!is.na(group_identifier)) |> 
+  arrange(group_identifier) |> 
+  select(sampling_event_identifier, group_identifier)
+
+checklists_unique <- auk_unique(checklists_shared, checklists_only = TRUE)
+nrow(checklists_shared)
+nrow(checklists_unique)
+
+#filter
+checklists2 <- checklists |>
+        filter(all_species_reported, year(observation_date) %in% c(1980:2024),
+         month(observation_date) %in% c(4:10)) |>
+  mutate(year = year(observation_date), month = month(observation_date))
+
+observations2 <- observations |>
+        filter(all_species_reported, year(observation_date) %in% c(1980:2024),
+         month(observation_date) %in% c(4:10)) |>
+  mutate(year = year(observation_date), month = month(observation_date))
+
+#all months
+checklists3 <- checklists |>
+        filter(all_species_reported, year(observation_date) %in% c(1980:2024)) |>
+  mutate(year = year(observation_date))
+
+observations3 <- observations |>
+        filter(all_species_reported, year(observation_date) %in% c(1980:2024)) |>
+  mutate(year = year(observation_date))
+
+
+#geometry
+# convert checklist locations to points geometries
+checklists_sf2 <- checklists2 |> 
+  select(checklist_id, latitude, longitude) |> 
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+
+# boundary of study region, buffered by 1 km
+study_region_buffered <- read_sf("https://drive.google.com/file/d/12Ba6t_6-i4298pbO8WsgcKkVvzSY3Z8v/view?usp=drive_link", layer = "ne_states") |>
+  # sf does not properly buffer complex polygons in lat/lng coordinates
+  # so we temporarily project the data to a planar coordinate system
+  st_transform(crs = 8857) |>
+  filter(state_code == "US-AK") |>
+  st_buffer(dist = 1000) |> 
+  st_transform(crs = st_crs(checklists_sf2))
+
+# spatially subset the checklists to those in the study region
+in_region <- checklists_sf2[study_region_buffered, ]
+
+# join to checklists and observations to remove checklists outside region
+checklists2 <- semi_join(checklists2, in_region, by = "checklist_id")
+observations2 <- semi_join(observations2, in_region, by = "checklist_id")
+
+
+#all months
+checklists_sf3 <- checklists3 |> 
+  select(checklist_id, latitude, longitude) |> 
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+study_region_buffered <- read_sf("https://drive.google.com/file/d/12Ba6t_6-i4298pbO8WsgcKkVvzSY3Z8v/view?usp=drive_link", layer = "ne_states") |>
+  # sf does not properly buffer complex polygons in lat/lng coordinates
+  # so we temporarily project the data to a planar coordinate system
+  st_transform(crs = 8857) |>
+  filter(state_code == "US-AK") |>
+  st_buffer(dist = 1000) |> 
+  st_transform(crs = st_crs(checklists_sf3))
+in_region <- checklists_sf3[study_region_buffered, ]
+checklists3 <- semi_join(checklists3, in_region, by = "checklist_id")
+observations3 <- semi_join(observations3, in_region, by = "checklist_id")
+
+
+#zero-filling
+zf <- auk_zerofill(observations2, checklists2, collapse = TRUE)
+
+#all months
+zf3 <- auk_zerofill(observations3, checklists3, collapse = TRUE)
+
+
+#time
+# function to convert time observation to hours since midnight
+time_to_decimal <- function(x) {
+  x <- hms(x, quiet = TRUE)
+  hour(x) + minute(x) / 60 + second(x) / 3600
+}
+
+# clean up variables
+zf <- zf |> 
+  mutate(
+    # convert count to integer and X to NA
+    # ignore the warning "NAs introduced by coercion"
+    observation_count = as.integer(observation_count),
+    # effort_distance_km to 0 for stationary counts
+    effort_distance_km = if_else(protocol_type == "Stationary", 
+                                 0, effort_distance_km),
+    # convert duration to hours
+    effort_hours = duration_minutes / 60,
+    # speed km/h
+    effort_speed_kmph = effort_distance_km / effort_hours,
+    # convert time to decimal hours since midnight
+    hours_of_day = time_to_decimal(time_observations_started),
+    # split date into year and day of year
+    year = year(observation_date),
+    day_of_year = yday(observation_date)
+  )
+
+
+#all months
+zf3 <- zf3 |> 
+  mutate(
+    # convert count to integer and X to NA
+    # ignore the warning "NAs introduced by coercion"
+    observation_count = as.integer(observation_count),
+    # effort_distance_km to 0 for stationary counts
+    effort_distance_km = if_else(protocol_type == "Stationary", 
+                                 0, effort_distance_km),
+    # convert duration to hours
+    effort_hours = duration_minutes / 60,
+    # speed km/h
+    effort_speed_kmph = effort_distance_km / effort_hours,
+    # convert time to decimal hours since midnight
+    hours_of_day = time_to_decimal(time_observations_started),
+    # split date into year and day of year
+    year = year(observation_date),
+    day_of_year = yday(observation_date)
+    )
+    
+    
+# additional variation filtering
+zf_filtered <- zf |> 
+  filter(protocol_type %in% c("Stationary", "Traveling"),
+         effort_hours <= 6,
+         effort_distance_km <= 10,
+         effort_speed_kmph <= 100,
+         number_observers <= 10)
+
+#all months
+zf_filtered3 <- zf3 |> 
+  filter(protocol_type %in% c("Stationary", "Traveling"),
+         effort_hours <= 6,
+         effort_distance_km <= 10,
+         effort_speed_kmph <= 100,
+         number_observers <= 10)
+
+
+#cleaning
+checklists2 <- zf_filtered |> 
+  select(checklist_id, observer_id,
+         observation_count, species_observed, 
+         state_code, locality_id, latitude, longitude,
+         protocol_type, all_species_reported,
+         observation_date, year, day_of_year,
+         hours_of_day, 
+         effort_hours, effort_distance_km, effort_speed_kmph,
+         number_observers, month)
+write_csv(checklists2, "~/Documents/DS/project-r-squared/src/appx/checklists-zf_snoowl_us-ak.csv", na = "")
+
+checklists3 <- zf_filtered3 |> 
+  select(checklist_id, observer_id,
+         observation_count, species_observed, 
+         state_code, locality_id, latitude, longitude,
+         protocol_type, all_species_reported,
+         observation_date, year, day_of_year,
+         hours_of_day, 
+         effort_hours, effort_distance_km, effort_speed_kmph,
+         number_observers)
+write_csv(checklists3, "~/Documents/DS/project-r-squared/src/appx/checklists-zf_snoowl_us-ak_3.csv", na = "")
+
+
+#mapping
+ne_land <- read_sf("https://drive.google.com/file/d/12Ba6t_6-i4298pbO8WsgcKkVvzSY3Z8v/view?usp=drive_link", "ne_land") |> 
+  st_geometry()
+ne_country_lines <- read_sf("https://drive.google.com/file/d/12Ba6t_6-i4298pbO8WsgcKkVvzSY3Z8v/view?usp=drive_link", "ne_country_lines") |> 
+  st_geometry()
+ne_state_lines <- read_sf("https://drive.google.com/file/d/12Ba6t_6-i4298pbO8WsgcKkVvzSY3Z8v/view?usp=drive_link", "ne_state_lines") |> 
+  st_geometry()
+study_region <- read_sf("https://drive.google.com/file/d/12Ba6t_6-i4298pbO8WsgcKkVvzSY3Z8v/view?usp=drive_link", "ne_states") |> 
+  filter(state_code == "US-AK") |> 
+  st_geometry()
+
+checklists_sf2 <- checklists2 |> 
+  # convert to spatial points
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326) |> 
+  select(species_observed, year)
+
+#all months
+checklists_sf3 <- checklists3 |> 
+  # convert to spatial points
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326) |> 
+  select(species_observed, year)
+
+
+#average latitude
+min_x <- bbox_study_region["xmin"]
+max_x <- bbox_study_region["xmax"]
+min_y <- bbox_study_region["ymin"]
+max_y <- bbox_study_region["ymax"]
+
+
+c_true2 <- checklists_sf2 |>
+  filter(species_observed == TRUE, year %in% c(1988, 1993, 2009, 2013, 2018, 2024))
+c_true3 <- checklists_sf3 |>
+  filter(species_observed == TRUE, year %in% c(1988, 1993, 2009, 2013, 2018, 2024))
 ```
+
+# Introduction {-}
+The effects of human-induced global warming have been known and observable for years. Rising temperatures, receding ice sheets, and increased severe weather are only the tips of this melting iceberg, and these effects already span the globe. However, we humans aren't the only ones affected by our own actions, and other animals on the planet are beginning to feel the toll as well.
+
+Birds, in particular. Global warming has wreaked havoc on bird populations, from destroying their habitats to creating temperatures that are downright lethal to some species. Seasonal birds, too, have had their migration patterns impacted by global climate change.
+
+Our research focuses on a particular species: the Snowy Owl. Elusive and already rare, its adaptation to arctic climates means it is even more impacted by climate change than many other species. By using information most easily available to us - that is, evolution of migration patterns - we hope to illustrate this impact and raise awareness on the non-human effects of climate change.
+
+# Background {-}
+In order to analyze frequency and location of Snowy owl sightings across a span of time,we utilized Cornell University’s eBird Basic Dataset from their department of Ornithology. [eBird](https://ebird.org/home) is a public data/observation recording platform that allows birdwatchers to document, manage, and upload their sightings; this allows for extensive and detailed coverage worldwide, with over 100 million annual sightings contributed through the platform. Not only does the platform document simple sighting data, it also tracks behavior, habitat, population and trends, and any uncommon entries are reviewed by regional experts. This ensures data quality in addition to quantity. The public data is updated regularly at monthly intervals.
+
+eBird data is freely available by request, with the ability to filter by region, species, and timeframe. We opted to examine Snowy Owl sightings in Alaska - a contained and more accessible region of their arctic habitat.
+
+After requesting the data, we followed some of the guidelines in the [eBird data best practices](https://ebird.github.io/ebird-best-practices/intro.html) document to simplify and filter it, including filtering by specific months vs. year-round, and converting checklist locations (the way data is originally recorded by the uploader) into geometry that can be used in spatial viz.
+
+# Findings {-}
+By comparing data of Snowy Owl sightings from 1980 to today, we were able to determine a few things.
+
+[Spatial viz here]
+```{r echo= FALSE}
+summer <- ggplot() +
+  geom_sf(data = ne_land, fill = "white") +   # Land background
+  geom_sf(data = ne_country_lines, color = "black", size = 0.3) +  # Country borders
+  geom_sf(data = ne_state_lines, color = "gray40", size = 0.2) +  # State borders
+  geom_sf(data = study_region_buffered, fill = NA, color = "lightblue", size = 0.8) + # Outline study area
+  geom_sf(data = c_true2, aes(col = as.factor(year)), size = 2, alpha = .9, shape = 16) +
+  theme_minimal() +
+  labs(title = "Observations of Snowy Owls in Alaska (Summer Months)") +
+  coord_sf(xlim = c(min_x, max_x), ylim = c(min_y, max_y)) +
+      scale_color_viridis_d(name = "Year")
+summer
+
+all_months <- ggplot() +
+  geom_sf(data = ne_land, fill = "white") +   # Land background
+  geom_sf(data = ne_country_lines, color = "black", size = 0.3) +  # Country borders
+  geom_sf(data = ne_state_lines, color = "gray40", size = 0.2) +  # State borders
+  geom_sf(data = study_region_buffered, fill = NA, color = "lightblue", size = 0.8) + # Outline study area
+  geom_sf(data = c_true3, aes(col = as.factor(year)), size = 2, alpha = .9, shape = 16) +
+  theme_minimal() +
+  labs(title = "Observations of Snowy Owls in Alaska (All Year)") +
+  coord_sf(xlim = c(min_x, max_x), ylim = c(min_y, max_y)) +
+      scale_color_viridis_d(name = "Year")
+all_months
+```
+
+Overall, the sightings in Summer, when migration typically happens, compared to the year-round data appears to be quite similar, with a few outliers in the southernmost parts of Alaska appearing in the year-round data but not the summer ones. This could be due to a scarcity of data as well as influenced by bias, which will be further discussed in the next section.
+
+[Altitude viz here]
+```{r echo=FALSE}
+#summer
+alt_sum <- checklists2 |>
+  filter(species_observed == TRUE) |>
+  group_by(observation_date) |>
+  summarize(avLat = mean(latitude)) |>
+  ggplot(aes(x = observation_date, y = avLat)) +
+  geom_smooth() +
+  theme_classic() +
+  labs(x = "Date (months 4-10)", y = "Average Latitude", title = "Average Latitude over Time in Summer Months, 1988-2024") 
+alt_sum
+#all months
+
+alt_all <- checklists3 |>
+  filter(species_observed == TRUE) |>
+  group_by(observation_date) |>
+  summarize(avLat = mean(latitude)) |>
+  ggplot(aes(x = observation_date, y = avLat)) +
+  geom_smooth() +
+  theme_classic() +
+  labs(x = "Date (all year)", y = "Average Latitude", title = "Average Latitude over Time in All Year Around, 1988-2024")
+alt_all
+```
+
+The latitude of Snowy owl migrations have been steadily increasing from 1988 to today, with a noticeable peak around 2020. This indicates that the owls have had to travel further and further north to find a suitable climate and habitat for them, and is the most direct indicator of migration shifts caused over time by global warming. Otherwise, the two graphs are again fairly similar, with the year-round data having a shallow dip around the early 1990s compared to the summer data steadily increasing since the start.
+
+[All protocol viz here]
+```{r echo=FALSE}
+ggplot(edbird, aes(x = `OBSERVATION DATE`)) +
+  geom_bar()+
+  facet_wrap(~ `PROTOCOL TYPE`)
+
+ggplot(edbird, aes(x=`PROTOCOL TYPE`)) +
+  geom_bar()
+
+ggplot(edbird, aes(x = COUNTY, fill = `PROTOCOL TYPE`)) +
+  geom_bar(position = "fill") +
+  coord_flip()
+```
+We took a look at the **protocol type** of our observation data as well. Protocol type indicates the circumstances of the birdwatcher's observation, which affects the type of checklist data they submit. For the ones we include here:
+
+- **Area** is intended for targeted, specialized surveys that exhaustively and scientifically search a specific area for birds. Contrary to most birding trips, this often involves repeatedly covering an area of land, and is more concerned about area covered than distance traveled. This is most commonly seen in professional research rather than casual birdwatching.
+- **Banding** involves observations for birds captured for banding, which means attaching a band or tag to their leg to create a permanent record of bird observations. Banding observations have very different rates from casual birdwatching, like the `Area` protocol, and is usually researced for professional research.
+- **Historical** indicates that there was an observation, but the exact details - such as start time, duration, and distance - are unclear.
+- **Incidental** indicates the observation was not the primary purpose of the trip - that is, the observation happened as an aside from another activity.
+- **Stationary** and **Traveling** both indicate trips taken specifically for birding (NOT `Incidental`), with exact time/duration and location data. `Stationary` means there was very little traveling from the starting location (less than 100ft.), while `Traveling` exceeds that movement and contains a best estimate of distance traveled.
+
+In our data, we notice that **Traveling** is the most reported protocol by a wide margin, at almost 5000 entries indicating intentional birding trips. These, though more accurate, can also be more susceptible to bias, as discussed below. 
+
+# Biases {-}
+Given that eBird reports an average growth rate of 20% every year, it is possible that increased frequency of snowy owl sightings over time can be explained by the increasing popularity and knowledge of birding as an activity and eBird as a platform, as well as the internet itself entering the mainstream.
+
+Additionally, eBird employs `complete` and `incomplete` checklists: complete checklists means that all birds on the list were observed, and there were no additional entries; thus, it can be inferred that if a bird is not on the list, it was not observed in the area. Incomplete checklists mean while do not have this kind of certainty, as the absence of a bird from the data may simply indicate the uploader didn't record its presence. In our filtering, we removed amounts of incomplete data, resulting in a much smaller amount of data that only included Snowy owl sightings, and this almost certainly has impacted the specificity of our results.
+eBird data itself is susceptible to many biases, with a list outline [here](https://ebird.github.io/ebird-best-practices/ebird.html#sec-ebird-challenges). Our spatial data is likely influenced by location/population bias: the areas where there are the most sightings also coincide with higher-populated areas, which means there are simply more people to report sightings and leads to higher-frequency reports. We ourselves are not familiar with Alaska's climate or population situations, so this bias is difficult to resolve.
+
+# Conclusion & Next Steps {-}
+We can evidently see that the frequency in which snowy owls migrate has increased significantly in the last decade, in the majority of locations they’ve been observed. Given that the effect of climate change on bird species is well documented, we can extrapolate that this increased frequency is due to human-caused global warming.
+
+With our current data, we were able to show that snowy owl migrations have increased and can infer that it is due to climate change, but if we could integrate climate data (such as temperature and wind speeds), the results would be more conclusive. Unfortunately due to our unfamiliarity and context surrounding the state of Alaska and it’s counties in our dataset, we are unable to conclude the location nor direction of snowy owls as they migrate. 
+
+Limiting our observations to Alaska also impacts our results: snowy owls have other habitats, of which Alaska comprises only a small portion. Some of these locations are hidden or difficult to access, and thus the observations might not be accurate to their actual behavior.
+There are many further questions we could extrapolate from here, such as whether the trends we draw can be conclusive to future data, and whether it is possible to predict Snowy Owl migration routes. However, to answer these questions, much more work has to be done to address the biases and shortcomings of our current data.
+
+
+
+
 

@@ -11,8 +11,8 @@ project:
 
 
 book:
-  title: "project title"
-  author: ["student 1 first and last name", "student 2 first and last name", "student 3 first and last name"]
+  title: "Evidence on Wings: How Has Snowy Owl Migration Shifted?"
+  author: ["Bontu T.", "Dani A.", "Dust L."]
   date: today  # use today to update date published based on last time project was edited
   date-format: full
   # favicon: images/logo.png
@@ -29,7 +29,7 @@ book:
 
 
   sidebar:
-    title: "sidebar title"
+    title: "Team R Squared"
     collapse-level: 2
     style: "docked"
     pinned: true
@@ -37,6 +37,18 @@ book:
 
   chapters:
     - index.qmd
+    
+    - part: "Effective Teamwork"
+      chapters:
+      - src/et/dust-l.qmd
+      - src/et/dani-a.qmd
+      - src/et/bontu-t.qmd
+  
+    - part: "EDA"
+      chapters:
+      - src/eda/dust-l.qmd
+      - src/eda/dani-a.qmd
+      - src/eda/bontu-t.qmd
 
   appendices:
   - src/appx/proposal.qmd

@@ -42,11 +42,13 @@ book:
       chapters:
       - src/et/dust-l.qmd
       - src/et/dani-a.qmd
+      - src/et/bontu-t.qmd
   
     - part: "EDA"
       chapters:
       - src/eda/dust-l.qmd
       - src/eda/dani-a.qmd
+      - src/eda/bontu-t.qmd
 
   appendices:
   - src/appx/proposal.qmd
